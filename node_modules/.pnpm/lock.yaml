@@ -1,0 +1,13 @@
+lockfileVersion: 5.4
+
+specifiers:
+  store: ^2.0.12
+
+dependencies:
+  store: 2.0.12
+
+packages:
+
+  /store/2.0.12:
+    resolution: {integrity: sha512-eO9xlzDpXLiMr9W1nQ3Nfp9EzZieIQc10zPPMP5jsVV7bLOziSFFBP0XoDXACEIFtdI+rIz0NwWVA/QVJ8zJtw==}
+    dev: false
