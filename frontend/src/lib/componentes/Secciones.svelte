@@ -1,0 +1,20 @@
+<script>
+	import SeccionInfo from './SeccionInfo.svelte';
+	import SeccionCapas from './SeccionCapas.svelte';
+	import SeccionNorma from './SeccionNorma.svelte';
+	import { SeccionStore } from '../../store';
+	let seccion;
+	SeccionStore.subscribe((value) => {
+		seccion = value;
+	});
+</script>
+
+<div class="h-screen w-96 bg-white absolute z-20 left-20">
+	{#if seccion === 1}
+		<SeccionInfo />
+	{:else if seccion === 2}
+		<SeccionCapas />
+	{:else}
+		<SeccionNorma />
+	{/if}
+</div>
