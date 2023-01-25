@@ -14,7 +14,7 @@
 		<SeccionInfo />
 	{:else if seccion === 2}
 		<SeccionCapas />
-	{:else}
+	{:else if seccion === 3}
 		<SeccionNorma />
 	{/if}
 </div>
