@@ -1,6 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import { assets } from '$app/paths';
 	import { CapaStore } from '../../store';
 
@@ -8,10 +8,17 @@
 	let GrupoCapas;
 	let CapaPlaza;
 	let CapaRuta;
+	let capNombre;
+	let leaflet;
+	CapaStore.subscribe((value) => {
+		capNombre = value;
+	});
+
+	let capas = [];
 
 	onMount(async () => {
 		if (browser) {
-			const leaflet = await import('leaflet');
+			leaflet = await import('leaflet');
 			let map = leaflet.map('map').setView([-25.497527777778, -54.678388888889], 90);
 			leaflet
 				.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -22,50 +29,38 @@
 
 			GrupoCapas = new leaflet.LayerGroup();
 			GrupoCapas.addTo(map);
-			fetch(`${assets}/capas/PlazaCity.geojson`)
-				.then((response) => response.json())
-				.then((data) => {
-					CapaPlaza = new leaflet.GeoJSON(data);
-
-					GrupoCapas.addLayer(CapaPlaza);
-				});
-			fetch(`${assets}/capas/ruta.geojson`)
-				.then((response) => response.json())
-				.then((data) => {
-					CapaRuta = new leaflet.GeoJSON(data);
-
-					GrupoCapas.addLayer(CapaRuta);
-				});
+			capNombre.map((elemento, indice) => {
+				if (elemento.mostrar === true) {
+					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
+						.then((response) => response.json())
+						.then((data) => {
+							GrupoCapas.addLayer(new leaflet.GeoJSON(data));
+						});
+				}
+			});
 		}
+	});
+	afterUpdate(() => {
+		capNombre.map((elemento, indice) => {
+			if (elemento.mostrar === true) {
+				fetch(`${assets}/capas/${elemento.nombre}.geojson`)
+					.then((response) => response.json())
+					.then((data) => {
+						capas[indice] = new leaflet.GeoJSON(data, {
+							color: 'red'
+						});
+						GrupoCapas.addLayer(capas[indice]);
+					});
+			} else {
+				if (capas[indice]) {
+					GrupoCapas.removeLayer(capas[indice]);
+				}
+			}
+		});
 	});
 </script>
 
-<div>
-	<button
-		on:click={() => {
-			GrupoCapas.removeLayer(CapaPlaza);
-		}}
-		class="text-xs text-gray-500 w-full h-20 hover:bg-gray-100 flex flex-col items-center justify-center py-2 my-3"
-		on:dblclick={() => {
-			GrupoCapas.addLayer(CapaPlaza);
-		}}
-		>Quitar capa de Plaza
-	</button>
-</div>
-<div>
-	<button
-		on:click={() => {
-			GrupoCapas.removeLayer(CapaRuta);
-		}}
-		class="text-xs text-gray-500 w-full h-20 hover:bg-gray-100 flex flex-col items-center justify-center py-2 my-3"
-		on:dblclick={() => {
-			GrupoCapas.addLayer(CapaRuta);
-		}}
-		>Quitar capa de Ruta
-	</button>
-</div>
-
-<div class="h-screen w-screen z-10" id="map" bind:this={mapElement} />
+<div class="h-screen w-screen z-10" id="map" bind:this={mapElement} data-algo={capNombre} />
 
 <style>
 	@import 'leaflet/dist/leaflet.css';
