@@ -9,7 +9,7 @@
 	});
 </script>
 
-<div class="h-screen w-96 bg-white absolute z-20 left-20">
+<div class="h-screen w-96  bg-gray-700 absolute z-30 left-20">
 	{#if seccion === 1}
 		<SeccionInfo />
 	{:else if seccion === 2}

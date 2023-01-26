@@ -1,16 +1,14 @@
 <div>
-	<p class="Nombre m-4 mt-5">Nombre:</p>
-	<p class="Descripcion m-4 ">Descripción:</p>
+	<p class="Nombre m-4 mt-5  text-gray-200">Nombre:</p>
+	<p class="Descripcion m-4  text-gray-200">Descripción:</p>
 </div>
 
 <style>
 	.Nombre {
-		color: gray;
 		text-decoration-line: underline;
 		font-family: sans-serif;
 	}
 	.Descripcion {
-		color: gray;
 		text-decoration-line: underline;
 		font-family: sans-serif;
 	}

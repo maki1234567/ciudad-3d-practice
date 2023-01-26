@@ -15,3 +15,4 @@ export const CapaStore = writable([
 		mostrar: false
 	}
 ]);
+export const TDStore = writable(0);

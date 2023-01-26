@@ -15,7 +15,7 @@
 
 <button
 	on:click={click}
-	class="text-xs text-gray-500 w-full h-20 hover:bg-gray-100 flex flex-col items-center justify-center py-2 my-3"
+	class="text-sm text-gray-200 w-full h-20 hover:bg-gray-900 flex flex-col items-center justify-center py-2 my-3"
 >
 	<slot />
 	{nombre}</button

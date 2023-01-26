@@ -16,21 +16,26 @@
 	};
 </script>
 
-<div>
-	<label for="capa1" class="m-5 " id="cosa1"> PlazaCity</label>
+<div class=" text-gray-200">
+	<label for="capa1" class="m-5  " id="cosa1">
+		<span class="text-red-700 text-2xl align-middle	">•</span> PlazaCity</label
+	>
 
 	<input id="capa1" class="mt-5" type="checkbox" on:change={() => cambiar(0)} /><br />
 
-	<label for="capa1" class="m-5 " id="cosa1"> Rutas</label>
+	<label for="capa1" class="m-5 " id="cosa1">
+		<span class="text-red-700 text-2xl align-middle	">•</span> Rutas</label
+	>
 	<input id="capa1" class="mt-5" type="checkbox" on:change={() => cambiar(1)} /><br />
 
-	<label for="capa1" class="m-5 " id="cosa1"> iglesia</label>
+	<label for="capa1" class="m-5 " id="cosa1">
+		<span class="text-red-700 text-2xl align-middle	">•</span> Iglesia</label
+	>
 	<input id="capa1" class="mt-5" type="checkbox" on:change={() => cambiar(2)} /><br />
 </div>
 
 <style>
 	#cosa1 {
-		color: gray;
 		font-family: sans-serif;
 	}
 </style>
