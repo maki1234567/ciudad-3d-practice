@@ -42,17 +42,21 @@
 	});
 	afterUpdate(() => {
 		capNombre.map((elemento, indice) => {
-			if (elemento.mostrar === true) {
-				fetch(`${assets}/capas/${elemento.nombre}.geojson`)
-					.then((response) => response.json())
-					.then((data) => {
-						capas[indice] = new leaflet.GeoJSON(data, {
-							color: 'red'
-						});
-						GrupoCapas.addLayer(capas[indice]);
-					});
-			} else {
+			if (elemento.mostrar) {
 				if (capas[indice]) {
+					if (!GrupoCapas.hasLayer(capas[indice])) {
+						GrupoCapas.addLayer(capas[indice]);
+					}
+				} else {
+					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
+						.then((response) => response.json())
+						.then((data) => {
+							capas[indice] = new leaflet.GeoJSON(data);
+							GrupoCapas.addLayer(capas[indice]);
+						});
+				}
+			} else {
+				if (capas[indice] && GrupoCapas.hasLayer(capas[indice])) {
 					GrupoCapas.removeLayer(capas[indice]);
 				}
 			}
