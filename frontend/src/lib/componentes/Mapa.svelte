@@ -1,5 +1,5 @@
 <script>
-	import { browser } from '$app/environment';
+	import { browser, dev } from '$app/environment';
 	import { onMount, afterUpdate } from 'svelte';
 	import { assets } from '$app/paths';
 	import { CapaStore } from '../../store';
@@ -30,7 +30,11 @@
 						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				})
 				.addTo(map);
-			osmlayer = new OSMbuildings.OSMBuildings(map).load();
+			if (dev) {
+				osmlayer = new OSMbuildings.OSMBuildings(map).load();
+			} else {
+				osmlayer = new OSMBuildings(map).load();
+			}
 			GrupoCapas = new leaflet.LayerGroup();
 			GrupoCapas.addTo(map);
 			GrupoCapas.addLayer(osmLayer);
