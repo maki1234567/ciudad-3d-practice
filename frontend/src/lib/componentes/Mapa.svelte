@@ -38,7 +38,7 @@
 			if (dev) {
 				osmlayer = new OSMbuildings.OSMBuildings(map).load();
 			} else {
-				osmlayer = new OSMBuildings(map).load();
+				osmlayer = new OSMbuildings(map).load();
 			}
 			GrupoCapas = new leaflet.LayerGroup();
 			GrupoCapas.addTo(map);
