@@ -27,10 +27,13 @@
 	let inputCoordenadas = '';
 	const buscarCoorde = () => {
 		let newcoordenadas = inputCoordenadas.split(', ').map((item) => parseFloat(item));
-		console.log(newcoordenadas);
-		map.setView(newcoordenadas, 16);
+		map.setView(newcoordenadas, 20);
 	};
-
+	function handleKeyDown(event) {
+		if (event.keyCode === 13) {
+			buscarCoorde();
+		}
+	}
 	onMount(async () => {
 		if (browser) {
 			leaflet = await import('leaflet');
@@ -140,6 +143,7 @@
 		type="text"
 		placeholder="latitud, longitud"
 		bind:value={inputCoordenadas}
+		on:keydown={handleKeyDown}
 	/><svg
 		on:click={buscarCoorde}
 		class="w-5 h-5 fill-gray-400  "
