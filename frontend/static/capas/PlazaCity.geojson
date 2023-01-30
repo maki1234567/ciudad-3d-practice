@@ -6,10 +6,9 @@
 			"properties": {
 				"name": "casa1",
 				"descripcion": "Lorem Ipsum is simply dummy",
-				"stroke": "#1a5fb4",
-				"stroke-width": 0.1,
-				"stroke-opacity": 1,
-				"fill": "#1a5fb4",
+
+				"color": "#cc99ff",
+				"fill": "#cc99ff",
 				"fill-opacity": 0.1
 			},
 			"geometry": {

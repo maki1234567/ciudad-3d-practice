@@ -7,7 +7,12 @@ export const CapaStore = writable([
 		mostrar: false
 	},
 	{
-		nombre: 'ruta',
+		nombre: 'Asfalto',
+		mostrar: false
+	},
+
+	{
+		nombre: 'Empedrado',
 		mostrar: false
 	},
 	{
