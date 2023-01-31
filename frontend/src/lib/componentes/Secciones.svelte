@@ -3,6 +3,7 @@
 	import SeccionCapas from './SeccionCapas.svelte';
 	import SeccionNorma from './SeccionNorma.svelte';
 	import { SeccionStore } from '../../store';
+
 	let seccion;
 	SeccionStore.subscribe((value) => {
 		seccion = value;

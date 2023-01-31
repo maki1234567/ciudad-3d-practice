@@ -2,7 +2,7 @@
 	import Boton from './Boton.svelte';
 </script>
 
-<div class="div h-screen w-24 bg-gray-800 shadow-lg z-40">
+<div class="div h-screen w-24 bg-gray-800 shadow-lg z-40" id="bar">
 	<Boton nombre="Información" seccion={1}
 		><svg class="w-8 h-8 fill-gray-200  " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
 			><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path

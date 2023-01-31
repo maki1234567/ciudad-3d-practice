@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@beyonk/svelte-mapbox": "^9.0.5",
 		"leaflet": "^1.9.3",
+		"leaflet-search": "^3.0.9",
 		"osmbuildings": "0.2.0-b"
 	}
 }

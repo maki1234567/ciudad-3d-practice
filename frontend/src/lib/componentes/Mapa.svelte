@@ -3,9 +3,8 @@
 	import { onMount, afterUpdate } from 'svelte';
 	import { assets } from '$app/paths';
 	import { CapaStore } from '../../store';
-
-	let OSMbuildings;
 	let mapElement;
+	let OSMbuildings;
 	let GrupoCapas;
 	let capNombre;
 	let leaflet1;
@@ -28,6 +27,10 @@
 	const buscarCoorde = () => {
 		let newcoordenadas = inputCoordenadas.split(', ').map((item) => parseFloat(item));
 		map.setView(newcoordenadas, 20);
+		L.marker(newcoordenadas)
+			.addTo(map)
+
+			.openPopup();
 	};
 	function handleKeyDown(event) {
 		if (event.keyCode === 13) {
@@ -56,6 +59,7 @@
 						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				})
 				.addTo(map);
+
 			if (dev) {
 				osmlayer = new OSMbuildings.OSMBuildings(map).load();
 			} else {
