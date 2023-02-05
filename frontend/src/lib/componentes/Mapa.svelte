@@ -74,7 +74,7 @@
 			GrupoCapas.addLayer(osmlayer);
 			capNombre.map((elemento, indice) => {
 				if (elemento.mostrar === true) {
-					fetch(`${assets}/capas/${name}.geojson`)
+					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
 						.then((response) => response.json())
 						.then((data) => {
 							GrupoCapas.addLayer(new leaflet.GeoJSON(data));
@@ -91,7 +91,7 @@
 						GrupoCapas.addLayer(capas[indice]);
 					}
 				} else {
-					fetch(`${assets}/capas/${name}.geojson`)
+					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
 						.then((response) => response.json())
 						.then((data) => {
 							const style = data.features[0].properties;
