@@ -62,13 +62,9 @@
 					attribution:
 						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				})
+
 				.addTo(map);
 
-			if (dev) {
-				osmlayer = new OSMbuildings.OSMBuildings(map).load();
-			} else {
-				osmlayer = new OSMBuildings(map).load();
-			}
 			GrupoCapas = new leaflet.LayerGroup();
 			GrupoCapas.addTo(map);
 			GrupoCapas.addLayer(osmlayer);
@@ -82,6 +78,10 @@
 				}
 			});
 		}
+		map.addLayer({
+			url: 'https://your-host.com/3d-data.json',
+			type: 'geojson'
+		});
 	});
 	afterUpdate(() => {
 		capNombre.map((elemento, indice) => {
