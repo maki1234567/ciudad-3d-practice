@@ -27,7 +27,11 @@
 	const buscarCoorde = () => {
 		let newcoordenadas = inputCoordenadas.split(', ').map((item) => parseFloat(item));
 		map.setView(newcoordenadas, 20);
-		L.marker(newcoordenadas)
+		leaflet
+			.marker(newcoordenadas)
+			.on('click', function (e) {
+				marker.remove();
+			})
 			.addTo(map)
 
 			.openPopup();
@@ -70,7 +74,7 @@
 			GrupoCapas.addLayer(osmlayer);
 			capNombre.map((elemento, indice) => {
 				if (elemento.mostrar === true) {
-					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
+					fetch(`${assets}/capas/${name}.geojson`)
 						.then((response) => response.json())
 						.then((data) => {
 							GrupoCapas.addLayer(new leaflet.GeoJSON(data));
@@ -87,7 +91,7 @@
 						GrupoCapas.addLayer(capas[indice]);
 					}
 				} else {
-					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
+					fetch(`${assets}/capas/${name}.geojson`)
 						.then((response) => response.json())
 						.then((data) => {
 							const style = data.features[0].properties;
@@ -103,6 +107,14 @@
 			}
 		});
 	});
+	const loadModel = async (name) => {
+		const osmBuildings = await import('osmbuildings/dist/OSMBuildings-Leaflet.debug');
+		if (dev) {
+			new osmBuildings.OSMBuildings(map).load(`${assets}/layers/${name}.geojson`);
+		} else {
+			new OSMBuildings(map).load(`${assets}/layers/${name}.geojson`);
+		}
+	};
 </script>
 
 <button
@@ -150,6 +162,7 @@
 		on:keydown={handleKeyDown}
 	/><svg
 		on:click={buscarCoorde}
+		on:keydown={handleKeyDown}
 		class="w-5 h-5 fill-gray-400  "
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 512 512"
