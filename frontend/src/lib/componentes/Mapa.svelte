@@ -1,198 +1,136 @@
 <script>
-	import { browser, dev } from '$app/environment';
-	import { onMount, afterUpdate } from 'svelte';
-	import { assets } from '$app/paths';
-	import { CapaStore } from '../../store';
-	let mapElement;
-	let OSMbuildings;
-	let GrupoCapas;
-	let capNombre;
-	let leaflet1;
-	let leaflet;
-	let leaflet2;
-	let osmlayer;
-	let map;
-	let mapNombre = [
-		'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWsxMjM0NTY3IiwiYSI6ImNsZGVzaXpmbTBnazkzcW5yc3dydWFvbGgifQ.newNjWFN35d3MwooA6wZ0w',
-		'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-	];
-	let mapActual = 1;
-	CapaStore.subscribe((value) => {
-		capNombre = value;
-	});
+	import mapboxGl from 'mapbox-gl';
+	import mapboxgl from 'mapbox-gl';
+	import { onMount } from 'svelte';
+	mapboxgl.accessToken =
+		'pk.eyJ1IjoibWsxMjM0NTY3IiwiYSI6ImNsZGVzaXpmbTBnazkzcW5yc3dydWFvbGgifQ.newNjWFN35d3MwooA6wZ0w';
+	onMount(() => {
+		const map = new mapboxgl.Map({
+			style: 'mapbox://styles/mapbox/dark-v11',
+			center: [-54.61028514552068, -25.509389375238143],
+			zoom: 16,
+			pitch: 45,
+			bearing: -17.6,
+			container: 'map',
+			antialias: true
+		});
+		map.on('style.load', () => {
+			// Insert the layer beneath any symbol layer.
+			const layers = map.getStyle().layers;
+			const labelLayerId = layers.find(
+				(layer) => layer.type === 'symbol' && layer.layout['text-field']
+			).id;
+			mapa3d(map, labelLayerId);
 
-	let capas = [];
-	let coordenadas = [-25.497527777778, -54.678388888889];
-	let inputCoordenadas = '';
-	const buscarCoorde = () => {
-		let newcoordenadas = inputCoordenadas.split(', ').map((item) => parseFloat(item));
-		map.setView(newcoordenadas, 20);
-		leaflet
-			.marker(newcoordenadas)
-			.on('click', function (e) {
-				marker.remove();
-			})
-			.addTo(map)
+			// The 'building' layer in the Mapbox Streets
+			// vector tileset contains building height data
+			// from OpenStreetMap.
+			let clicked = true;
 
-			.openPopup();
-	};
-	function handleKeyDown(event) {
-		if (event.keyCode === 13) {
-			buscarCoorde();
-		}
-	}
-	onMount(async () => {
-		if (browser) {
-			leaflet = await import('leaflet');
-			OSMbuildings = await import('osmbuildings/dist/OSMBuildings-Leaflet.debug');
-			map = leaflet.map('map').setView(coordenadas, 16);
-
-			leaflet1 = leaflet.tileLayer(
-				'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWsxMjM0NTY3IiwiYSI6ImNsZGVzaXpmbTBnazkzcW5yc3dydWFvbGgifQ.newNjWFN35d3MwooA6wZ0w',
-				{
-					attribution:
-						'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-					id: 'mapbox.satellite',
-					accessToken:
-						'pk.eyJ1IjoibWsxMjM0NTY3IiwiYSI6ImNsZGVzaXpmbTBnazkzcW5yc3dydWFvbGgifQ.newNjWFN35d3MwooA6wZ0w'
-				}
-			);
-			leaflet2 = leaflet
-				.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					attribution:
-						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				})
-
-				.addTo(map);
-
-			GrupoCapas = new leaflet.LayerGroup();
-			GrupoCapas.addTo(map);
-			GrupoCapas.addLayer(osmlayer);
-			capNombre.map((elemento, indice) => {
-				if (elemento.mostrar === true) {
-					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
-						.then((response) => response.json())
-						.then((data) => {
-							GrupoCapas.addLayer(new leaflet.GeoJSON(data));
-						});
+			let b_3d = document.getElementById('b_3d');
+			b_3d.addEventListener('click', () => {
+				if (clicked) {
+					map.removeLayer('add-3d-buildings');
+					b_3d.value = '3D';
+					clicked = false;
+				} else {
+					b_3d.value = '2D';
+					mapa3d(map, labelLayerId);
+					clicked = true;
 				}
 			});
-		}
-		map.addLayer({
-			url: 'https://your-host.com/3d-data.json',
-			type: 'geojson'
-		});
-	});
-	afterUpdate(() => {
-		capNombre.map((elemento, indice) => {
-			if (elemento.mostrar) {
-				if (capas[indice]) {
-					if (!GrupoCapas.hasLayer(capas[indice])) {
-						GrupoCapas.addLayer(capas[indice]);
-					}
-				} else {
-					fetch(`${assets}/capas/${elemento.nombre}.geojson`)
-						.then((response) => response.json())
-						.then((data) => {
-							const style = data.features[0].properties;
 
-							capas[indice] = new leaflet.GeoJSON(data, { style });
-							GrupoCapas.addLayer(capas[indice]);
-						});
-				}
-			} else {
-				if (capas[indice] && GrupoCapas.hasLayer(capas[indice])) {
-					GrupoCapas.removeLayer(capas[indice]);
-				}
+			function mapa3d(map, labelLayerId) {
+				map.addLayer(
+					{
+						id: 'add-3d-buildings',
+						source: 'composite',
+						'source-layer': 'building',
+						filter: ['==', 'extrude', 'true'],
+						type: 'fill-extrusion',
+						minzoom: 15,
+						paint: {
+							'fill-extrusion-color': '#aaa',
+
+							// Use an 'interpolate' expression to
+							// add a smooth transition effect to
+							// the buildings as the user zooms in.
+							'fill-extrusion-height': [
+								'interpolate',
+								['linear'],
+								['zoom'],
+								15,
+								0,
+								15.05,
+								['get', 'height']
+							],
+							'fill-extrusion-base': [
+								'interpolate',
+								['linear'],
+								['zoom'],
+								15,
+								0,
+								15.05,
+								['get', 'min_height']
+							],
+							'fill-extrusion-opacity': 0.6
+						}
+					},
+					labelLayerId
+				);
 			}
 		});
+
+		map.addControl(new mapboxgl.FullscreenControl());
 	});
-	const loadModel = async (name) => {
-		const osmBuildings = await import('osmbuildings/dist/OSMBuildings-Leaflet.debug');
-		if (dev) {
-			new osmBuildings.OSMBuildings(map).load(`${assets}/layers/${name}.geojson`);
-		} else {
-			new OSMBuildings(map).load(`${assets}/layers/${name}.geojson`);
-		}
-	};
+	function cambiarMapa() {
+		document.getElementById('b_style').addEventListener('click', () => {
+			if (map.hasLayer().sprite === 'mapbox://sprites/mapbox/dark-v11') {
+				map.removeLayer('mapbox://sprites/mapbox/dark-v11');
+				map.addLayer('mapbox://styles/mapbox/satellite-streets-v12');
+			} else {
+				map.removeLayer('mapbox://styles/mapbox/satellite-streets-v12');
+
+				map.addLayer('mapbox://styles/mapbox/dark-v11');
+			}
+		});
+	}
 </script>
 
-<button
-	class="boton absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t "
-	on:click={() => {
-		if (map.hasLayer(osmlayer)) {
-			map.removeLayer(osmlayer);
-		} else {
-			map.addLayer(osmlayer);
-		}
-	}}
->
-	3D</button
->
-<button
-	class=" boton2 absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t "
-	on:click={() => {
-		if (map.hasLayer(leaflet1)) {
-			map.removeLayer(leaflet1);
-			map.addLayer(leaflet2);
-		} else {
-			if (map.hasLayer(leaflet2)) {
-				map.removeLayer(leaflet2);
-				map.addLayer(leaflet1);
-			}
-		}
-	}}
->
-	Mapa</button
->
+<svelte:head>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet" />
+	<script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+</svelte:head>
 
-<div
-	class="h-screen w-screen z-10"
-	id="map"
-	bind:this={mapElement}
-	data-algo={(capNombre, mapActual)}
-/>
-<div class=" div2 absolute  z-20 bg-white rounded-md p-2 flex ">
+<div id="map" class="h-screen w-screen z-10" />
+<button />
+<div>
 	<input
-		id="buscador"
-		class="outline-0"
-		type="text"
-		placeholder="latitud, longitud"
-		bind:value={inputCoordenadas}
-		on:keydown={handleKeyDown}
-	/><svg
-		on:click={buscarCoorde}
-		on:keydown={handleKeyDown}
-		class="w-5 h-5 fill-gray-400  "
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 512 512"
-		><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
-			d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"
-		/></svg
-	>
+		type="button"
+		id="b_3d"
+		value="3D"
+		class="map_buttons  absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t"
+		on:click={b_3d}
+	/>
+	<input
+		type="button"
+		id="b_style"
+		value="Satelite"
+		class="map_buttons  absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t "
+		on:click={cambiarMapa}
+	/>
 </div>
 
 <style>
-	@import 'leaflet/dist/leaflet.css';
-	.boton {
-		left: 120px;
-		bottom: 20px;
-		font-weight: 400;
-	}
-	.boton2 {
+	#b_3d {
 		left: 120px;
 		bottom: 55px;
 		font-weight: 400;
 	}
-
-	.div2 {
+	#b_style {
+		left: 160px;
+		bottom: 55px;
 		font-weight: 400;
-		right: 10px;
-		top: 10px;
-		font-family: sans-serif;
-	}
-	#buscador {
-		border: 0;
-		font-family: sans-serif;
 	}
 </style>

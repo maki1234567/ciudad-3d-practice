@@ -28,6 +28,8 @@
 		"@beyonk/svelte-mapbox": "^9.0.5",
 		"leaflet": "^1.9.3",
 		"leaflet-search": "^3.0.9",
+		"mapbox": "1.0.0-beta10",
+		"mapbox-gl": "^2.12.1",
 		"osmbuildings": "0.2.0-b"
 	}
 }
