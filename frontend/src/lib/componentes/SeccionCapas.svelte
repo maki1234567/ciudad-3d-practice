@@ -28,7 +28,7 @@
 	}
 </script>
 
-<div class=" text-gray-200">
+<div class=" text-gray-200" id="capitas">
 	<label for="capa1" class="m-5  " id="cosa1">
 		<span class="text-red-700 text-2xl align-middle	">•</span> PlazaCity</label
 	>

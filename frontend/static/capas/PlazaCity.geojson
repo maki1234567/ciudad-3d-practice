@@ -4,11 +4,12 @@
 		{
 			"type": "Feature",
 			"properties": {
-				"name": "casa1",
+				"name": "casa2",
 				"descripcion": "Lorem Ipsum is simply dummy",
-
-				"color": "#cc99ff",
-				"fill": "#cc99ff",
+				"stroke": "#1a5fb4",
+				"stroke-width": 0.1,
+				"stroke-opacity": 1,
+				"fill": "#1a5fb4",
 				"fill-opacity": 0.1
 			},
 			"geometry": {
@@ -29,7 +30,7 @@
 		{
 			"type": "Feature",
 			"properties": {
-				"name": "casa2",
+				"name": "casa1",
 				"descripcion": "Lorem Ipsum is simply dummy",
 				"stroke": "#1a5fb4",
 				"stroke-width": 0.1,
@@ -86,7 +87,7 @@
 		{
 			"type": "Feature",
 			"properties": {
-				"name": "casa4",
+				"name": "casa5",
 				"descripcion": "Lorem Ipsum is simply dummy",
 				"stroke": "#1a5fb4",
 				"stroke-width": 0.1,
@@ -115,7 +116,7 @@
 		{
 			"type": "Feature",
 			"properties": {
-				"name": "casa5",
+				"name": "casa4",
 				"descripcion": "Lorem Ipsum is simply dummy",
 				"stroke": "#1a5fb4",
 				"stroke-width": 0.1,
@@ -142,7 +143,7 @@
 		{
 			"type": "Feature",
 			"properties": {
-				"name": "casa6",
+				"name": "casa7",
 				"descripcion": "Lorem Ipsum is simply dummy",
 				"stroke": "#1a5fb4",
 				"stroke-width": 0.1,
@@ -167,7 +168,7 @@
 		{
 			"type": "Feature",
 			"properties": {
-				"name": "casa7",
+				"name": "casa6",
 				"descripcion": "Lorem Ipsum is simply dummy",
 				"stroke": "#1a5fb4",
 				"stroke-width": 0.1,
@@ -273,6 +274,25 @@
 						[-54.67907245724322, -25.498532325179966],
 						[-54.67903499561386, -25.498144605269047],
 						[-54.679339683531396, -25.498113046616368]
+					]
+				],
+				"type": "Polygon"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"name": "casa de prueba",
+				"descripcion": "casa de prueba"
+			},
+			"geometry": {
+				"coordinates": [
+					[
+						[-54.677983594084324, -25.497441184221728],
+						[-54.677983594084324, -25.497557311528254],
+						[-54.67784102702359, -25.497557311528254],
+						[-54.67784102702359, -25.497441184221728],
+						[-54.677983594084324, -25.497441184221728]
 					]
 				],
 				"type": "Polygon"
