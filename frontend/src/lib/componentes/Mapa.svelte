@@ -35,65 +35,7 @@
 				// The 'building' layer in the Mapbox Streets
 				// vector tileset contains building height data
 				// from OpenStreetMap.
-				map.addLayer('PlazaCity', {
-					id: 'plazacity',
-					type: 'geojson',
-					data: 'CapaStore',
-					generateId: true
-				});
 
-				map.addLayer('Empedrado', {
-					type: 'geojson',
-					data: 'CapaStore',
-					generateId: true
-				});
-
-				map.addLayer('Asfalto', {
-					type: 'geojson',
-					data: 'CapaStore',
-					generateId: true
-				});
-				map.addLayer('iglesia', {
-					type: 'geojson',
-					data: 'CapaStore',
-					generateId: true
-				});
-
-				///////////////// checkboxes /////////////////////
-
-				addMapLayer('iglesia', 'Iglesia', 'line', line_style('#59c2ff', 5));
-				addMapLayer('plazacity', 'PlazaCity', 'line', line_style('#000000'));
-				addMapLayer('empedrado', 'Empedrado', 'line', line_style('#65661a'));
-				addMapLayer('asfalto', 'Asfalto', 'line', line_style('#a3a3a3'));
-
-				let c2 = document.getElementById('plazacity');
-				let added = false;
-
-				c2.addEventListener('change', function () {
-					if (this.checked) {
-						map.removeLayer('add-3d-buildings');
-						map.addLayer({
-							id: c2.id,
-							source: 'plazacity-source',
-							type: 'fill-extrusion',
-							paint: {
-								'fill-extrusion-color': [
-									'case',
-									['boolean', ['feature-state', 'hover'], false],
-									'#000000',
-									'#9aad9f'
-								],
-								'fill-extrusion-height': 3,
-								'fill-extrusion-opacity': 0.8
-							}
-						});
-						added = true;
-					} else {
-						map.removeLayer(c2.id);
-						added = false;
-						mapa3d(map, labelLayerId);
-					}
-				});
 				let clicked = true;
 
 				let b_3d = document.getElementById('b_3d');
@@ -201,28 +143,6 @@
 		value="3D"
 		class="map_buttons  absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t"
 	/>
-</div>
-<div id="Capas">
-	<div class="checkboxes">
-		<input type="checkbox" id="plazacity" class="capas_checkbox" />
-
-		<p class="capa_titulo">PlazaCity</p>
-	</div>
-
-	<div class="checkboxes">
-		<input type="checkbox" id="asfalto" class="capas_checkbox" />
-		<p class="capa_titulo">Asfaltado</p>
-	</div>
-
-	<div class="checkboxes">
-		<input type="checkbox" id="empedrado" class="capas_checkbox" />
-		<p class="capa_titulo">Empedrado</p>
-	</div>
-
-	<div class="checkboxes">
-		<input type="checkbox" id="iglesia" class="capas_checkbox" />
-		<p class="capa_titulo">Iglesia</p>
-	</div>
 </div>
 
 <style>
