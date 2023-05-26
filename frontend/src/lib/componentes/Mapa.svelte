@@ -178,7 +178,7 @@
 	<label
 		for="light-v11"
 		class="map_buttons  absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t mx-10 "
-		>light</label
+		>lightm</label
 	>
 	<input id="dark-v11" type="button" name="rtoggle" value="dark" />
 	<label
