@@ -15,7 +15,7 @@
 			container: 'map',
 			antialias: true
 		});
-		map.addControl(new mapboxgl.FullscreenControl());
+		map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
 
 		map.on('style.load', () => {
 			const layerList = document.getElementById('menu');
@@ -35,7 +35,6 @@
 			).id;
 
 			mapa3d(map, labelLayerId);
-			capa1(map);
 
 			let clicked = true;
 			let b_3d = document.getElementById('b_3d');
@@ -52,103 +51,60 @@
 				}
 			});
 
-			let click = true;
-			let cp1 = document.getElementById('cp1');
+			function mapa3d(map, labelLayerId) {
+				map.addLayer(
+					{
+						id: 'add-3d-buildings',
+						source: 'composite',
+						'source-layer': 'building',
+						filter: ['==', 'extrude', 'true'],
+						type: 'fill-extrusion',
+						minzoom: 15,
+						paint: {
+							'fill-extrusion-color': '#B01732',
+							'fill-extrusion-height': [
+								'interpolate',
+								['linear'],
+								['zoom'],
+								15,
+								0,
+								15.05,
+								['get', 'height']
+							],
+							'fill-extrusion-base': [
+								'interpolate',
+								['linear'],
+								['zoom'],
+								15,
+								0,
+								15.05,
+								['get', 'min_height']
+							],
+							'fill-extrusion-opacity': 0.8
+						}
+					},
+					labelLayerId
+				);
+			}
 
-			cp1.addEventListener('click', () => {
-				if (click) {
-					map.removeLayer('add-cap1');
-					cp1.value = 'cap1';
-					click = false;
-				} else {
-					cp1.value = 'cap';
-					capa1(map);
-					click = true;
-				}
+			const geocoderContainer = document.getElementById('geocoder-container');
+
+			const geocoder = new MapboxGeocoder({
+				accessToken: mapboxgl.accessToken,
+				mapboxgl: mapboxgl,
+				marker: true
 			});
+
+			geocoder.on('result', (event) => {
+				const result = event.result;
+				const lngLat = result.center;
+				map.setCenter(lngLat);
+			});
+
+			// Agrega el buscador al mapa
+			map.addControl(geocoder);
+			//geocoderContainer.appendChild(geocoder.onAdd(map));
 		});
-
-		function mapa3d(map, labelLayerId) {
-			map.addLayer(
-				{
-					id: 'add-3d-buildings',
-					source: 'composite',
-					'source-layer': 'building',
-					filter: ['==', 'extrude', 'true'],
-					type: 'fill-extrusion',
-					minzoom: 15,
-					paint: {
-						'fill-extrusion-color': '#B01732',
-						'fill-extrusion-height': [
-							'interpolate',
-							['linear'],
-							['zoom'],
-							15,
-							0,
-							15.05,
-							['get', 'height']
-						],
-						'fill-extrusion-base': [
-							'interpolate',
-							['linear'],
-							['zoom'],
-							15,
-							0,
-							15.05,
-							['get', 'min_height']
-						],
-						'fill-extrusion-opacity': 0.8
-					}
-				},
-				labelLayerId
-			);
-		}
-
-		function capa1(map) {
-			map.addSource({
-				id: 'add-cap1',
-				type: 'fill',
-				source: {
-					type: 'geojson',
-					data: {
-						type: 'FeatureCollection',
-						features: [
-							{
-								type: 'Feature',
-								properties: {
-									stroke: '#8cff00',
-									'stroke-width': 5,
-									'stroke-opacity': 4,
-									fill: '#0e1d90',
-									'fill-opacity': 1
-								},
-								geometry: {
-									type: 'Polygon',
-									coordinates: [
-										[
-											[-54.68845496882682, -25.496248446570547],
-											[-54.68863913143474, -25.497860943625568],
-											[-54.681680425975856, -25.498346282861093],
-											[-54.682771522985504, -25.5100210694398],
-											[-54.678418138766745, -25.51060099436978],
-											[-54.677464509575856, -25.49671055218562],
-											[-54.68845496882682, -25.496248446570547]
-										]
-									]
-								},
-								id: 'add-cap1'
-							}
-						]
-					}
-				},
-				paint: {
-					'fill-color': ['get', 'fill'],
-					'fill-opacity': ['get', 'fill-opacity'],
-					'fill-outline-color': ['get', 'stroke'],
-					'fill-outline-width': ['get', 'stroke-width']
-				}
-			});
-		}
 	});
 </script>
 
@@ -158,8 +114,15 @@
 
 	<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
 	<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+	<script
+		src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"
+	></script>
+	<link
+		rel="stylesheet"
+		href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+		type="text/css"
+	/>
 </svelte:head>
-
 <div id="map" class=" w-screen h-screen z-10" />
 <div id="menu" class=" absolute  ">
 	<input
@@ -178,7 +141,7 @@
 	<label
 		for="light-v11"
 		class="map_buttons  absolute  z-20 text-gray-200 bg-gray-800  hover:bg-slate-900 py-1 px-1  rounded-sm border-t mx-10 "
-		>lightm</label
+		>light</label
 	>
 	<input id="dark-v11" type="button" name="rtoggle" value="dark" />
 	<label
